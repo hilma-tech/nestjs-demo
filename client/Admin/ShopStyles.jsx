@@ -4,7 +4,6 @@ export default StyleSheet.create({
     textInput: {
         height: 40,
         width: "100%",
-        border: "20 black solid",
         paddingHorizontal: 40,
         textAlignVertical: "bottom",
         borderColor: 'gray',
