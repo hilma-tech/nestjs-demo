@@ -1,7 +1,5 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import styles from './GlobalStyles';
 import {AuthProvider, Registration, Login, createPrivateNavigator} from './Authentication';
 import UserMain from './User/UserMain';
 import AdminMain from './Admin/AdminMain';

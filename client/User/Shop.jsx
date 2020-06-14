@@ -1,7 +1,7 @@
 
 import React, { useContext, useState, useCallback } from 'react';
 import { Text, FlatList, View, Image, Button } from 'react-native';
-import Database from '../database.json';
+import Database from '../../server/database.json';
 import { AuthContext } from '../Authentication/AuthProvider';
 
 const Shop = () => {

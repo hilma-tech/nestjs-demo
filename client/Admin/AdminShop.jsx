@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Text, Button, View, Image, TextInput, FlatList, Platform, Alert, Modal } from 'react-native';
-import Database from '../database.json';
+import Database from '../../server/database.json';
 import styles from './ShopStyles';
 // import { AuthContext } from '../Authentication/AuthProvider';
 import WebModal from 'modal-react-native-web';
