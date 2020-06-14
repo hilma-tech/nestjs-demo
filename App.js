@@ -1,19 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import styles from './GlobalStyles';
+import {AuthProvider, Registration, Login, createPrivateNavigator} from './Authentication';
+import UserMain from './User/UserMain';
+import AdminMain from './Admin/AdminMain';
 
-export default function App() {
+const RootStack = createPrivateNavigator();
+const Comps = { AdminMain, UserMain };
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <RootStack.Navigator screenOptions={{title: "PETS ONLINE", headerTitleStyle: {textAlign: 'center'}}}>
+      <RootStack.HomeScreen name="Home" component={Login} comps={Comps} />
+      <RootStack.Screen name="Login" component={Login} />
+      <RootStack.Screen name="Registration" component={Registration} />
+    </RootStack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function ProvidedApp() {
+  return (
+    <AuthProvider>
+      <NavigationContainer>
+        <App />
+      </NavigationContainer>
+    </AuthProvider>
+  )
+}
