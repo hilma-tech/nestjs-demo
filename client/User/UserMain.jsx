@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { createPrivateNavigator } from '../Authentication';
 import UserInfo from './UserInfo';
 import Shop from './Shop';
+import { createPrivateNavigator } from '../Authentication';
 
 const RootStack = createPrivateNavigator();
 const UserMain = () => {
