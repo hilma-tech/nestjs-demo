@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import {Pet} from "../pets/pet.entity";
 
 enum Gender { Male, Female };
 
@@ -18,4 +19,8 @@ export class User {
 
     @Column({ default: Gender.Male })
     gender: Gender;
+
+    @OneToOne(type => Pet, pet => pet.userId)
+    pet: Pet;
+
 }

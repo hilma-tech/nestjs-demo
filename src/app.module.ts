@@ -6,11 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
+import { PetsController } from './pets/pets.controller';
+import { PetsService } from './pets/pets.service';
+import { PetsModule } from './pets/pets.module';
+import { ItemsController } from './items/items.controller';
+import { ItemsModule } from './items/items.module';
 
 @Module({
-  imports: [UsersModule],
-  controllers: [AppController, UsersController],
-  providers: [AppService],
+  imports: [UsersModule, PetsModule, ItemsModule],
+  controllers: [AppController, UsersController, PetsController, ItemsController],
+  providers: [AppService, PetsService],
 })
 
 @Module({
