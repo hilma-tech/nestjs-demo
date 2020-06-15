@@ -16,7 +16,7 @@ export class UsersController {
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() userData: UserData) {
+    update(@Param('id') id: string, @Body() userData: UserData): string {
         return `This action updates a #${id} user`;
     }
 }
