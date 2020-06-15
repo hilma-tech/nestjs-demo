@@ -1,6 +1,15 @@
 import { Controller, Get, Put, Post, Req, Param, Body } from '@nestjs/common';
 import { Request } from 'express';
 
+class UserData {
+    name: string;
+    gender?: Gender = Gender.Male;
+    username: string;
+    password: string;
+}
+
+enum Gender { Male, Female };
+
 @Controller('users')
 export class UsersController {
 
@@ -20,13 +29,3 @@ export class UsersController {
         return `This action updates a #${id} user`;
     }
 }
-
-
-class UserData {
-    name: string;
-    gender?: Gender = Gender.Male;
-    username: string;
-    password: string;
-}
-
-enum Gender { Male, Female };
