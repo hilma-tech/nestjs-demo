@@ -85,7 +85,7 @@ const AuthProvider = ({ children , proxy }) => {
             if (response.status === 204) return { status: response.status, ok: response.ok, json: { ok: response.ok } };
             throw error;
         }
-    },
+    }
 
     const superFetch = async(input, init = undefined)=> {
         try {
