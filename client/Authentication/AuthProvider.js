@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useMemo, useEffect } from 'react';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Platform } from 'react-native';
 import { getIpAddressAsync } from 'expo-network';
 export const AuthContext = createContext(null);
 
@@ -64,9 +64,10 @@ const AuthProvider = ({ children , proxy }) => {
         if (init.headers) init.headers = { ...basicHeaders, ...init.headers }
         else init.headers = basicHeaders;
         const [data, error] = await superFetch(proxy + input, init);
-        if (error && error.statusCode === 401 && logoutOnUnauthorized) logout();
+        if (error && error.statusCode === 401 && logoutOnUnauthorized) Logout();
         return [data, error];
-    }, [logout, storage, proxy]);
+    }, [Logout, storage, proxy]);
+
     const isAuthenticated = useMemo(() => storage && !!storage.at, [storage]);
 
     const createCookieString = (cookieObject) => {
@@ -97,6 +98,7 @@ const AuthProvider = ({ children , proxy }) => {
             return [null, { error: { message: "No response, check your network connectivity", statusCode: 500, name: "ERROR" } }];
         }
     }
+
     const value = useMemo(() => ({ ...storage, updateUserInfo, superAuthFetch, Login, Logout, isAuthenticated }), [storage, updateUserInfo, superAuthFetch, Login, Logout, isAuthenticated]);
     if (!storage) return null;
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
