@@ -1,13 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 import { User } from "../users/user.entity";
 import { Item } from "../items/item.entity";
-
-enum Gender { Male, Female };
+import { Gender } from '../types/gender';
 
 @Entity()
 export class Pet {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string; 
 
     @Column()
     name: string;

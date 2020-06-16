@@ -1,14 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
-import {Pet} from "../pets/pet.entity";
-
-enum Gender { Male, Female };
+import { Pet } from "../pets/pet.entity";
+import { Gender } from '../types/gender';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-    @Column()
+    @Column({unique: true})
     username: string;
 
     @Column()
@@ -17,10 +16,9 @@ export class User {
     @Column()
     name: string;
 
-    @Column({ default: Gender.Male })
-    gender: Gender;
+    @Column({ type: "enum", default: Gender.Male, enum: Gender })
+    gender?: Gender;
 
     @OneToOne(type => Pet, pet => pet.userId)
     pet: Pet;
-
 }
