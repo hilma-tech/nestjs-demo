@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
 import { Pet } from "../pets/pet.entity";
-import { Gender } from '../types/gender';
+import { Gender } from '../common/enum/gender.enum';
 
 @Entity()
 export class User {
