@@ -15,10 +15,9 @@ export class User {
 
     @Column()
     name: string;
-
     @Column({ type: "enum", default: Gender.Male, enum: Gender })
     gender?: Gender;
 
-    @OneToOne(type => Pet, pet => pet.userId)
+    @OneToOne(type => Pet, pet => pet.user, {cascade: true})
     pet: Pet;
 }

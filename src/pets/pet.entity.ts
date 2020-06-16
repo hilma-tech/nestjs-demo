@@ -19,7 +19,7 @@ export class Pet {
 
     @OneToOne(type => User, user => user.pet)
     @JoinColumn()
-    userId: string;
+    user: string;
 
     @ManyToMany(type => Item)
     @JoinTable()

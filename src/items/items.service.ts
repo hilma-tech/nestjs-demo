@@ -9,4 +9,17 @@ export class ItemsService {
         @InjectRepository(Item)
         private readonly itemsRepository: Repository<Item>,
     ) { }
+
+    async create(body) {
+        return await this.itemsRepository.save(body)
+    }
+
+    async findAll() {
+        return await this.itemsRepository.find();
+    }
+
+    async updatePrice(id: string, price: number) {
+        return await this.itemsRepository.update(id, {price});
+    }
+
 }
