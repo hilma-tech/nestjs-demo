@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 import { User } from "../users/user.entity";
 import { Item } from "../items/item.entity";
-import { Gender } from '../types/gender';
+import { Gender } from '../common/enum/gender.enum';
 
 @Entity()
 export class Pet {
@@ -24,5 +24,4 @@ export class Pet {
     @ManyToMany(type => Item)
     @JoinTable()
     items: Item[];
-
 }
