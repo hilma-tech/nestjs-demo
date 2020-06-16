@@ -1,12 +1,18 @@
 
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { Text, FlatList, View, Image, Button } from 'react-native';
-import Database from '../database.json';
 import { AuthContext } from '../Authentication/AuthProvider';
 
 const Shop = () => {
-    const { updateUserInfo, user } = useContext(AuthContext)
-    let [items, setItems] = useState(JSON.parse(JSON.stringify(Database.items)))
+    const { updateUserInfo, user, superAuthFetch } = useContext(AuthContext)
+    let [items, setItems] = useState(null)
+
+    useEffect(() => {
+        (async () => {
+            let [res, err] = await superAuthFetch('/items');
+            setItems(res);
+        })()
+    }, [])
 
     let buyItem = useCallback(async (item) => {
         let bought = true;
@@ -16,17 +22,16 @@ const Shop = () => {
         })
         if (!bought) return alert("You don't have enough money for that.");
         setItems(items => {
-            let i = items.indexOf(item); 
+            let i = items.indexOf(item);
             items[i].stock--;
-            console.log("items", items)
             return items;
-       })
+        })
     }, [user]);
 
     return (
         <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 30 }}> ~~Shop~~ (your money: {user.money})</Text>
-            <FlatList
+            {items ? <FlatList
                 data={items}
                 extraData={setItems}
                 renderItem={({ item }) =>
@@ -37,8 +42,8 @@ const Shop = () => {
                             <Button style={{ marginBottom: 5 }} title="BUY" onPress={() => buyItem(item)} />
                         </View>
                     </View>}
-                keyExtractor={item => item.id}
-            />
+                keyExtractor={item => JSON.stringify(item.id)}
+            /> : <Text> Loading...</Text>}
 
         </View>
     );

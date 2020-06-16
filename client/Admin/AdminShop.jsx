@@ -1,9 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, Button, View, Image, TextInput, FlatList, Platform, Alert, Modal } from 'react-native';
-import Database from '../database.json';
 import styles from './ShopStyles';
-// import { AuthContext } from '../Authentication/AuthProvider';
+import { AuthContext } from '../Authentication/AuthProvider';
 import WebModal from 'modal-react-native-web';
 
 let MyModal = Modal;
@@ -17,15 +16,25 @@ let Confirm = (text, onPress) => Alert.alert("DELETE ITEM", text, [
 if (Platform.OS === 'web') Confirm = confirm;
 
 const AdminShop = () => {
-    let [items, setItems] = useState(Database.items)
+    const { superAuthFetch } = useContext(AuthContext)
+    let [items, setItems] = useState(null)
     let [updateModalData, setUpdateModalData] = useState(false)
     let [addModalData, setAddModalData] = useState(false)
 
-    // const { Logout, user } = useContext(AuthContext)
-
+    useEffect(() => {
+        (async () => {
+            let [res, err] = await superAuthFetch('/items');
+            setItems(res);
+        })()
+    }, [])
 
     const updateItemPrice = (item) => {
-        let updateSuccess = (newPrice) => {
+        let updateSuccess = async (newPrice) => {
+            let [res, err] = await superAuthFetch(`/items/${item.id}/updatePrice`, {
+                method: 'PUT',
+                body: JSON.stringify({price: newPrice})        
+            });
+            if (!res || err) return alert("ERROR", res || err)
             setItems(oldItems => {
                 let i = oldItems.indexOf(item);
                 oldItems[i].price = newPrice;
@@ -38,7 +47,11 @@ const AdminShop = () => {
     }
 
     const deleteItem = (item) => {
-        const onApprove = () => {
+        const onApprove = async () => {
+            let [res, err] = await superAuthFetch(`/items/${item.id}`, {
+                method: 'DELETE'        
+            });
+            if (!res || err) return alert("ERROR", res || err)
             setItems(oldItems => {
                 let i = oldItems.indexOf(item);
                 oldItems.splice(i, 1);
@@ -51,12 +64,17 @@ const AdminShop = () => {
     }
 
     const addItem = (item) => {
-        let addSuccess = (data) => {
+        let addSuccess = async (data) => {
+            let [res, err] = await superAuthFetch(`/items`, {
+                method: 'POST',
+                body: JSON.stringify(data)        
+            });
+            if (!res || err) return alert("ERROR", res || err)
             let { name, price, image, stock } = data;
             if (!name || !price || !image || !stock) return alert("Try again. some of the data is missing.");
             setItems([{ id: Math.random(), name, price, image, stock }, ...items])
             alert(`Added Item ${name} || ${price}`)
-            setAddModalData({ ...addModalData, text: null})
+            setAddModalData({ ...addModalData, text: null })
         }
         setAddModalData({ text: "Add new Item", success: addSuccess, cancle: () => setAddModalData({ ...addModalData, text: null }) });
     }
@@ -67,7 +85,7 @@ const AdminShop = () => {
             <AddItemModal visible={addModalData.text ? true : false} text={addModalData.text} onSuccess={addModalData.success} onCancle={addModalData.cancle} />
             <Text> AdminShop </Text>
             <Button title="Add Item" onPress={addItem} />
-            <FlatList
+            {items ? <FlatList
                 data={items}
                 extraData={items}
                 renderItem={({ item }) =>
@@ -79,8 +97,8 @@ const AdminShop = () => {
                             <Button style={{ marginBottom: 5 }} title="Edit Price" onPress={() => updateItemPrice(item)} />
                         </View>
                     </View>}
-                keyExtractor={item => item.id}
-            />
+                keyExtractor={item => JSON.stringify(item.id)}
+            /> : <Text> loading...</Text>}
         </View>
     );
 }
@@ -111,7 +129,7 @@ const AddItemModal = (props) => {
                 <TextInput placeholder="Name" value={item.name} onChangeText={(name) => setItem({ ...item, name })} autoFocus={true} style={styles.textInput} />
                 <TextInput placeholder="Price" value={item.price} keyboardType={"number-pad"} onChangeText={(price) => setText({ ...item, price })} style={styles.textInput} />
                 <TextInput placeholder="Stock" value={item.stock} keyboardType={"number-pad"} onChangeText={(stock) => setText({ ...item, stock })} style={styles.textInput} />
-                <Image source={{ uri: item.image }} style={{width: 200, height: 200}}/>
+                <Image source={{ uri: item.image }} style={{ width: 200, height: 200 }} />
                 <Button onPress={() => props.onSuccess(item)} title="Approve" />
                 <Button onPress={props.onCancle} title="Cancle" />
             </View>

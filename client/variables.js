@@ -1,10 +1,15 @@
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 const { manifest } = Constants;
 
-let localIP = `${manifest.debuggerHost.split(':').shift()}`
+let localIP = Platform.select({
+    web: () => `127.0.0.1`,
+    default: () => `${manifest.debuggerHost.split(':').shift()}`
+})();
+
 const ENV = {
   dev: {
-    apiUrl: `http://${localIP}:8083`
+    apiUrl: `http://${localIP}:3000`
   },
   staging: {
     apiUrl: ""

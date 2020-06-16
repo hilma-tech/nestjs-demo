@@ -18,8 +18,12 @@ export class ItemsService {
         return await this.itemsRepository.find();
     }
 
-    async updatePrice(id: string, price: number) {
+    async updatePrice(id: number, price: number) {
         return await this.itemsRepository.update(id, {price});
+    }
+
+    async delete(id: number) {
+        return await this.itemsRepository.delete(id);
     }
 
 }

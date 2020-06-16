@@ -1,29 +1,17 @@
 import React, { createContext, useState, useCallback, useMemo, useEffect } from 'react';
-import { AsyncStorage } from 'react-native';
-import { getIpAddressAsync } from 'expo-network';
+import { AsyncStorage, Platform } from 'react-native';
+import variables from '../variables';
 export const AuthContext = createContext(null);
 
-const AuthProvider = ({ children , proxy }) => {
+const AuthProvider = ({ children, proxy }) => {
     const [storage, setStorage] = useState(null) // {user: , kls: , at: ,}
 
     useEffect(() => {
         (async () => {
             const [[, kl], [, klo], [, usr], [, AccessToken]] = await AsyncStorage.multiGet(['kl', 'klo', 'user', 'AccessToken']);
             setStorage({ user: JSON.parse(usr), at: AccessToken, kls: { kl, klo } });
-
-            if (Platform.OS === "web") {
-                const ip = await getIpAddressAsync();
-                proxy = `${ip}:8080`;
-            } else {
-                const variables = require('../variables.js');
-                proxy = variables.apiUrl;
-            }
         })()
     }, []);
-
-    useEffect(() => {
-        console.log("userstoagre", storage && storage.user)
-    }, [storage]);
 
     const updateUserInfo = useCallback(async (body) => {
         try {
@@ -59,14 +47,16 @@ const AuthProvider = ({ children , proxy }) => {
         return;
     }, [AsyncStorage]);
 
-    const superAuthFetch = useCallback(async (input, init) => {
+    const superAuthFetch = useCallback(async (input, init = {}) => {
         let basicHeaders = { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': storage.at, 'Cookie': createCookieString(storage) }
         if (init.headers) init.headers = { ...basicHeaders, ...init.headers }
         else init.headers = basicHeaders;
-        const [data, error] = await superFetch(proxy + input, init);
-        if (error && error.statusCode === 401 && logoutOnUnauthorized) logout();
+        console.log("proxy", variables.apiUrl)
+        const [data, error] = await superFetch(variables.apiUrl + input, init);
+        if (error && error.statusCode === 401 && logoutOnUnauthorized) Logout();
         return [data, error];
-    }, [logout, storage, proxy]);
+    }, [Logout, storage, variables]);
+
     const isAuthenticated = useMemo(() => storage && !!storage.at, [storage]);
 
     const createCookieString = (cookieObject) => {
@@ -85,7 +75,7 @@ const AuthProvider = ({ children , proxy }) => {
             if (response.status === 204) return { status: response.status, ok: response.ok, json: { ok: response.ok } };
             throw error;
         }
-    },
+    }
 
     const superFetch = async(input, init = undefined)=> {
         try {
@@ -97,6 +87,7 @@ const AuthProvider = ({ children , proxy }) => {
             return [null, { error: { message: "No response, check your network connectivity", statusCode: 500, name: "ERROR" } }];
         }
     }
+
     const value = useMemo(() => ({ ...storage, updateUserInfo, superAuthFetch, Login, Logout, isAuthenticated }), [storage, updateUserInfo, superAuthFetch, Login, Logout, isAuthenticated]);
     if (!storage) return null;
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
