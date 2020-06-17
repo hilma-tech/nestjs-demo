@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Put, Param, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body, Delete, UseGuards } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { Item } from './item.entity';
+import { Roles } from 'src/common/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('items')
 export class ItemsController {
@@ -16,21 +19,29 @@ export class ItemsController {
         return items;
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMIN','USER')
     @Get()
     async findAll() {
         return await this.itemsService.findAll();
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMIN')
     @Post()
     async create(@Body() itemData: Item) {
         return await this.itemsService.create(itemData);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMIN')
     @Delete(':id')
     async delete(@Param('id') id: number,) {
         return await this.itemsService.delete(id);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMIN')
     @Put(':id/updatePrice')
     async updatePrice(@Param('id') id: number, @Body() body: any) {
         return await this.itemsService.updatePrice(id, body.price);
