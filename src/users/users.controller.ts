@@ -3,8 +3,7 @@ import { User } from './user.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/common/roles.decorator';
+import { UseRoles } from 'src/common/use-roles.decorator';
 
 
 @Controller('users')
@@ -31,17 +30,15 @@ export class UsersController {
         return user;
     }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseRoles('ADMIN')
     @Post()
-    @Roles('ADMIN')
     async create(@Body() userData: User) {
         let newUser = await this.authService.create(userData);
         return newUser;
     }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseRoles('ADMIN', 'USER')
     @Put(':id')
-    @Roles('ADMIN', 'USER')
     async update(@Param('id') id: string, @Body() userData: User) {
         let updatedUser = await this.authService.update(id, userData);
         console.log("updated", updatedUser)
