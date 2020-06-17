@@ -1,0 +1,10 @@
+{
+  "USER": {
+    "comps": ["Shop", "UserInfo"],
+    "defaultHomePage": "UserMain"
+  },
+  "ADMIN": {
+    "comps": ["AdminShop", "AdminInfo"],
+    "defaultHomePage": "AdminMain"
+  }
+}

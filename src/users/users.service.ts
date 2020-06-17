@@ -14,12 +14,17 @@ export class UsersService {
     return await this.usersRepository.save(body)
   }
 
-  findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne(id);
+  findOne(username: string): Promise<User> {
+    return this.usersRepository.findOne({ username });
   }
 
   async update(id: string, body: User) {
     return await this.usersRepository.update(id, body);
   }
 
+  async getUserRole(username: string): Promise<string> {
+    const user = await this.findOne(username);
+    const role = user.role;
+    return role;
+  }
 }
