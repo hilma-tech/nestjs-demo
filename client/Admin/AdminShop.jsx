@@ -23,14 +23,14 @@ const AdminShop = () => {
 
     useEffect(() => {
         (async () => {
-            let [res, err] = await superAuthFetch('/items');
+            let [res, err] = await superAuthFetch('/api/items');
             setItems(res);
         })()
     }, [])
 
     const updateItemPrice = (item) => {
         let updateSuccess = async (newPrice) => {
-            let [res, err] = await superAuthFetch(`/items/${item.id}/updatePrice`, {
+            let [res, err] = await superAuthFetch(`/api/items/${item.id}/updatePrice`, {
                 method: 'PUT',
                 body: JSON.stringify({price: newPrice})        
             });
@@ -48,7 +48,7 @@ const AdminShop = () => {
 
     const deleteItem = (item) => {
         const onApprove = async () => {
-            let [res, err] = await superAuthFetch(`/items/${item.id}`, {
+            let [res, err] = await superAuthFetch(`/api/items/${item.id}`, {
                 method: 'DELETE'        
             });
             if (!res || err) return alert("ERROR", res || err)
@@ -65,7 +65,7 @@ const AdminShop = () => {
 
     const addItem = (item) => {
         let addSuccess = async (data) => {
-            let [res, err] = await superAuthFetch(`/items`, {
+            let [res, err] = await superAuthFetch(`/api/items`, {
                 method: 'POST',
                 body: JSON.stringify(data)        
             });

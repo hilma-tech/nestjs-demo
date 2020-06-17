@@ -59,7 +59,7 @@ const AuthProvider = ({ children, proxy, logoutOnUnauthorized = false }) => {
     }, [Logout, storage, variables]);
 
     const Login = useCallback(async ({ username, password }) => {
-        const [response, error] = await superAuthFetch('/users/login', {
+        const [response, error] = await superAuthFetch('/api/users/login', {
             method: "POST",
             body: JSON.stringify({ username, password })
         });

@@ -11,7 +11,7 @@ import { join } from 'path';
   imports: [
     TypeOrmModule.forRoot(), UsersModule, PetsModule, ItemsModule, AuthModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client/build'),
+      rootPath: join(__dirname, '..', 'client/web-build'),
     }),
   ]
 })

@@ -9,7 +9,7 @@ const Shop = () => {
 
     useEffect(() => {
         (async () => {
-            let [res, err] = await superAuthFetch('/items');
+            let [res, err] = await superAuthFetch('/api/items');
             setItems(res);
         })()
     }, [])
