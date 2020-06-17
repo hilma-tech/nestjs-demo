@@ -127,8 +127,8 @@ const AddItemModal = (props) => {
             <View>
                 <Text> {props.text} </Text>
                 <TextInput placeholder="Name" value={item.name} onChangeText={(name) => setItem({ ...item, name })} autoFocus={true} style={styles.textInput} />
-                <TextInput placeholder="Price" value={item.price} keyboardType={"number-pad"} onChangeText={(price) => setText({ ...item, price })} style={styles.textInput} />
-                <TextInput placeholder="Stock" value={item.stock} keyboardType={"number-pad"} onChangeText={(stock) => setText({ ...item, stock })} style={styles.textInput} />
+                <TextInput placeholder="Price" value={item.price} keyboardType={"number-pad"} onChangeText={(price) => setItem({ ...item, price })} style={styles.textInput} />
+                <TextInput placeholder="Stock" value={item.stock} keyboardType={"number-pad"} onChangeText={(stock) => setItem({ ...item, stock })} style={styles.textInput} />
                 <Image source={{ uri: item.image }} style={{ width: 200, height: 200 }} />
                 <Button onPress={() => props.onSuccess(item)} title="Approve" />
                 <Button onPress={props.onCancle} title="Cancle" />
