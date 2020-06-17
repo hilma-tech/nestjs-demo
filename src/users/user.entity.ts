@@ -1,14 +1,15 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+
 import { Pet } from "../pets/pet.entity";
-import { Gender } from '../common/enum/gender.enum';
-import { Roles } from 'src/common/enum/roles.enum';
+import { Gender } from '../common/enums/gender.enum';
+import { Roles } from '../common/enums/roles.enum';
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id?: string;
 
-    @Column({unique: true})
+    @Column({ unique: true })
     username: string;
 
     @Column()
@@ -18,11 +19,11 @@ export class User {
     name: string;
 
     @Column({ default: Roles.USER })
-    role: Roles
+    role?: Roles
 
     @Column({ type: "enum", default: Gender.Male, enum: Gender })
     gender?: Gender;
 
-    @OneToOne(type => Pet, pet => pet.user, {cascade: true})
+    @OneToOne(type => Pet, pet => pet.user, { cascade: true })
     pet: Pet;
 }

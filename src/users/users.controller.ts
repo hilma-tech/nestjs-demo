@@ -1,31 +1,32 @@
-import { Controller, Get, Put, Post, Param, Body, UseGuards, Request } from '@nestjs/common';
-import { User } from './user.entity';
-import { AuthService } from 'src/auth/auth.service';
-import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UseRoles } from 'src/common/use-roles.decorator';
+import { Controller, Get, Put, Post, Param, Body, Request } from '@nestjs/common';
 
+import { User } from './user.entity';
+import { UsersService } from './users.service';
+import { UseRoles } from '../common/decorators/use-roles.decorator';
+import { Gender } from '../common/enums/gender.enum';
+import { UseLocalAuth } from 'src/common/decorators/use-local-auth.decorator';
+import { UseJwtAuth } from 'src/common/decorators/use-jwt-auth.decorator';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(private readonly usersService: UsersService) { }
 
-    @UseGuards(LocalAuthGuard)
+    @UseLocalAuth()
     @Post('login')
     async login(@Request() req) {
-        return this.authService.login(req.user);
+        return this.usersService.login(req.user);
     }
 
     @Get('createBasicData')
     async createBasicData() {
-        let newUser = await this.authService.create({ username: "Yona123", password: "123123", name: "Yona Ben Reuven", pet: { name: "Rivka", gender: "Female", image: "https://www.howrse.co.il/media/equideo/image/chevaux/adulte/americain/normal/300/pie-tb-bai.png" } });
+        let newUser = await this.usersService.create({ username: "Yona123", password: "123123", name: "Yona Ben Reuven", pet: { name: "Rivka", gender: Gender.Female, image: "https://www.howrse.co.il/media/equideo/image/chevaux/adulte/americain/normal/300/pie-tb-bai.png" } });
         return newUser;
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseJwtAuth()
     @Get()
     async findOne(@Request() req) {
-        let user = await this.authService.findOne(req.user.username);
+        let user = await this.usersService.findOne(req.user.username);
         if (!user) return "User Was Not Found."
         return user;
     }
@@ -33,14 +34,14 @@ export class UsersController {
     @UseRoles('ADMIN')
     @Post()
     async create(@Body() userData: User) {
-        let newUser = await this.authService.create(userData);
+        let newUser = await this.usersService.create(userData);
         return newUser;
     }
 
     @UseRoles('ADMIN', 'USER')
     @Put(':id')
     async update(@Param('id') id: string, @Body() userData: User) {
-        let updatedUser = await this.authService.update(id, userData);
+        let updatedUser = await this.usersService.update(id, userData);
         console.log("updated", updatedUser)
         return `This action updates a #${id} user`;
     }

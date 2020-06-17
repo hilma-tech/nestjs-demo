@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Put, Param, Body, Delete } from '@nestjs/common';
+
 import { ItemsService } from './items.service';
 import { Item } from './item.entity';
-import { UseRoles } from 'src/common/use-roles.decorator';
+import { UseRoles } from '../common/decorators/use-roles.decorator';
+import { UseJwtAuth } from 'src/common/decorators/use-jwt-auth.decorator';
 
 @Controller('items')
 export class ItemsController {
@@ -16,7 +18,8 @@ export class ItemsController {
         ]);
         return items;
     }
-    @UseRoles('ADMIN', 'USER')
+    
+    @UseJwtAuth()
     @Get()
     async findAll() {
         return await this.itemsService.findAll();
