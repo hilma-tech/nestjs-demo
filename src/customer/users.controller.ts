@@ -6,6 +6,7 @@ import { UseRoles } from '../common/decorators/use-roles.decorator';
 import { Gender } from '../common/enums/gender.enum';
 import { UseLocalAuth } from 'src/common/decorators/use-local-auth.decorator';
 import { UseJwtAuth } from 'src/common/decorators/use-jwt-auth.decorator';
+import { Roles } from 'src/common/enums/roles.enum';
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +20,7 @@ export class UsersController {
 
     @Get('createBasicData')
     async createBasicData() {
-        let newUser = await this.usersService.create({ username: "Yona123", password: "123123", name: "Yona Ben Reuven", pet: { name: "Rivka", gender: Gender.Female, image: "https://www.howrse.co.il/media/equideo/image/chevaux/adulte/americain/normal/300/pie-tb-bai.png" } });
+        let newUser = await this.usersService.create({ username: "sam123", password: "123456", name: "Sam", role: Roles.ADMIN });
         return newUser;
     }
 
